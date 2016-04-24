@@ -35,7 +35,7 @@ function processEvent(event) {
 
         apiaiRequest.on('response', (response) => {
             if (isDefined(response.result)) {
-                let responseText = response.result.fulfillment.speech;
+                let responseText = response.result.fulfillment.speech + " ha ha ha ha";
                 let responseData = response.result.fulfillment.data;
                 let action = response.result.action;
 
