@@ -57,9 +57,9 @@ function processEvent(event) {
 
             // }
 
-             console.log('Response as text message');
-             
-                    sendFBMessage(sender, {
+            
+
+            let messageData2 = {
                         attachment: { 
                             type: 'image', 
                             payload: { 
@@ -67,7 +67,9 @@ function processEvent(event) {
                                     }
                                 }
                             }
-                        );
+
+            console.log('Response as text message');
+            sendFBMessage(sender, messageData2);
 
 
 
