@@ -58,13 +58,13 @@ function processEvent(event) {
             // }
 
 
-messageData2 = {
+let messageData2 = {
     text: 'hello matthew text'
   };
 
 
              console.log('Response as text message');
-                    sendFBMessage(sender, messageData2 ); // {
+                    sendFBMessage(sender, messageData2); // {
                         
 
                         // attachment: { 
