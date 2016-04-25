@@ -84,7 +84,7 @@ function processEvent(event) {
           }, {
             "type": "postback",
             "title": "Postback",
-            "payload": "Payload for first element in a generic bubble",
+            "payload": "text: 'hi'",
           }],
         },{
           "title": "Second card",
