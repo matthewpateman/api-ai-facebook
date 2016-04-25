@@ -58,9 +58,9 @@ function processEvent(event) {
             // }
 
 
-messageData2 = {
+var messageData2 = {
     text: 'hello matthew text'
-  }
+  };
 
 
              console.log('Response as text message');
