@@ -26,12 +26,14 @@ function processEvent(event) {
             sessionIds.set(sender, uuid.v1());
         }
 
+
         console.log("Text", text);
 
         let apiaiRequest = apiAiService.textRequest(text,
             {
                 sessionId: sessionIds.get(sender)
             });
+
 
 
 //response text is here
@@ -113,6 +115,12 @@ function processEvent(event) {
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
     }
+
+    if (event.postback) {
+            text = JSON.stringify(event.postback)
+            sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+            continue
+        }
 }
 
 function sendFBMessage(sender, messageData) {
