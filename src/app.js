@@ -85,8 +85,8 @@ function processEvent(event) {
                                     url: 'https://www.matthewpateman.com/portfolio',
                                     title: 'Show Website'
                                         }
-                                    }
-                                ]
+                                    ]
+                                }
                             }
 
 
