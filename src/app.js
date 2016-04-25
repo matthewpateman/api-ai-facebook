@@ -57,7 +57,7 @@ function processEvent(event) {
 
             // }
 
-             console.log('Response as text message:' + responseText);
+             console.log('Response as text message');
                     sendFBMessage(sender, {text: 'Hello Matthew'});
         });
 
