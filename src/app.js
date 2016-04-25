@@ -74,7 +74,7 @@ function processEvent(event) {
                             payload: {
                                 template_type: 'button',
                                 text: 'What do you want to do next?',
-                                buttons: [
+                                buttons: {
                                     {
                                     type: 'web_url',
                                     url: 'https://www.matthewpateman.com',
@@ -85,7 +85,7 @@ function processEvent(event) {
                                     title: 'Start Chatting',
                                     payload: 'USER_DEFINED_PAYLOAD'
                                     }
-                                ]
+                                }
                             }
                         }
 
