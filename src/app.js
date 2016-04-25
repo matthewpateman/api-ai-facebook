@@ -84,7 +84,7 @@ function processEvent(event) {
           }, {
             "type": "postback",
             "title": "Postback",
-            "payload": {"text": "hi" },
+            "payload": "text: 'hi'",
           }],
         },{
           "title": "Second card",
