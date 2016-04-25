@@ -58,7 +58,7 @@ function processEvent(event) {
             // }
 
 
-  messageData = {
+var messageData = '{
     "attachment": {
       "type": "template",
       "payload": {
@@ -87,7 +87,7 @@ function processEvent(event) {
           }],
         }]
       }
-    }
+    }'
 
 
              console.log('Response as text message');
@@ -124,7 +124,7 @@ function processEvent(event) {
                         //     }
 
 
-                        );
+                        //);
 
 
 
