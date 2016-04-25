@@ -57,8 +57,16 @@ function processEvent(event) {
 
             // }
 
-            console.log('Response as text message');
-            sendFBMessage(sender, { attachment: { type: 'template', payload:{template_type: 'button', text: 'What do you want to do next?', buttons:[{type: 'web_url',url:'https://www.matthewpateman.com', title:'Show Website'}, {type: 'postback', title:'Start Chatting', payload:'USER_DEFINED_PAYLOAD' }]}});
+             console.log('Response as text message');
+                    sendFBMessage(sender, {
+                        attachment: { 
+                            type: 'image', 
+                            payload: { 
+                                url: 'http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w' 
+                                }
+                            }
+                        }
+                    );
 
 
 
