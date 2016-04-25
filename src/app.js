@@ -58,7 +58,7 @@ function processEvent(event) {
             // }
 
 
-var messageData2 = {
+messageData2 = {
     text: 'hello matthew text'
   };
 
