@@ -79,16 +79,15 @@ function processEvent(event) {
                                     type: 'web_url',
                                     url: 'https://www.matthewpateman.com',
                                     title: 'Show Website'
-                                    },
+                                        },
                                     {
                                     type: 'web_url',
                                     url: 'https://www.matthewpateman.com/portfolio',
                                     title: 'Show Website'
+                                        }
                                     }
                                 }
                             }
-                        }
-
 
 
                         );
