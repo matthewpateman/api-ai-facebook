@@ -1,125 +1,153 @@
-var express = require('express')
-var bodyParser = require('body-parser')
-var request = require('request')
-var app = express()
+'use strict';
 
-app.set('port', (process.env.PORT || 5000))
+const apiai = require('apiai');
+const express = require('express');
+const bodyParser = require('body-parser');
+const uuid = require('node-uuid');
+const request = require('request');
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({extended: false}))
+const REST_PORT = (process.env.PORT || 5000);
+const APIAI_ACCESS_TOKEN = process.env.APIAI_ACCESS_TOKEN;
+const APIAI_LANG = process.env.APIAI_LANG || 'en';
+const FB_VERIFY_TOKEN = process.env.FB_VERIFY_TOKEN;
+const FB_PAGE_ACCESS_TOKEN = process.env.FB_PAGE_ACCESS_TOKEN;
 
-// parse application/json
-app.use(bodyParser.json())
+const apiAiService = apiai(APIAI_ACCESS_TOKEN, {language: APIAI_LANG, requestSource: "fb"});
+const sessionIds = new Map();
 
-// index
-app.get('/', function (req, res) {
-    res.send('hello world i am a secret bot')
-})
+function processEvent(event) {
+    var sender = event.sender.id;
 
-// for facebook verification
+    if (event.message && event.message.text) {
+        var text = event.message.text;
+        // Handle a text message from this sender
+
+        if (!sessionIds.has(sender)) {
+            sessionIds.set(sender, uuid.v1());
+        }
+
+
+        console.log("Text", text);
+
+        let apiaiRequest = apiAiService.textRequest(text,
+            {
+                sessionId: sessionIds.get(sender)
+            });
+
+        apiaiRequest.on('response', (response) => {
+            if (isDefined(response.result)) {
+                let responseText = response.result.fulfillment.speech;
+                let responseData = response.result.fulfillment.data;
+                let action = response.result.action;
+
+                if (isDefined(responseData) && isDefined(responseData.facebook)) {
+                    try {
+                        console.log('Response as formatted message');
+                        sendFBMessage(sender, responseData.facebook);
+                    } catch (err) {
+                        sendFBMessage(sender, {text: err.message });
+                    }
+                } else if (isDefined(responseText)) {
+                    console.log('Response as text message:' + responseText);
+                    sendFBMessage(sender, {text: responseText});
+                }
+
+
+            }
+
+
+        });
+
+        apiaiRequest.on('error', (error) => console.error(error));
+        apiaiRequest.end();
+    }
+}
+
+function sendFBMessage(sender, messageData) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token: FB_PAGE_ACCESS_TOKEN},
+        method: 'POST',
+        json: {
+            recipient: {id: sender},
+            message: messageData
+        }
+    }, function (error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        }
+    });
+}
+
+function doSubscribeRequest() {
+    request({
+            method: 'POST',
+            uri: "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=" + FB_PAGE_ACCESS_TOKEN
+        },
+        function (error, response, body) {
+            if (error) {
+                console.error('Error while subscription: ', error);
+            } else {
+                console.log('Subscription result: ', response.body);
+            }
+        });
+}
+
+function isDefined(obj) {
+    if (typeof obj == 'undefined') {
+        return false;
+    }
+
+    if (!obj) {
+        return false;
+    }
+
+    return obj != null;
+}
+
+const app = express();
+app.use(bodyParser.json());
+app.all('*', function (req, res, next) {
+    // res.header("Access-Control-Allow-Origin", '*');
+    // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, content-type, accept");
+    next();
+});
+
 app.get('/webhook/', function (req, res) {
-    if (req.query['hub.verify_token'] === 'my_voice_is_my_password_verify_me') {
-        res.send(req.query['hub.challenge'])
+    if (req.query['hub.verify_token'] == FB_VERIFY_TOKEN) {
+        res.send(req.query['hub.challenge']);
+        
+        setTimeout(function () {
+            doSubscribeRequest();
+        }, 3000);
+    } else {
+        res.send('Error, wrong validation token');
     }
-    res.send('Error, wrong token')
-})
+});
 
-// to post data
 app.post('/webhook/', function (req, res) {
-    messaging_events = req.body.entry[0].messaging
-    for (i = 0; i < messaging_events.length; i++) {
-        event = req.body.entry[0].messaging[i]
-        sender = event.sender.id
-        if (event.message && event.message.text) {
-            text = event.message.text
-            if (text === 'Generic') {
-                sendGenericMessage(sender)
-                continue
-            }
-            sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+    try {
+        var messaging_events = req.body.entry[0].messaging;
+        for (var i = 0; i < messaging_events.length; i++) {
+            var event = req.body.entry[0].messaging[i];
+            processEvent(event);
         }
-        if (event.postback) {
-            text = JSON.stringify(event.postback)
-            sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-            continue
-        }
+        return res.status(200).json({
+            status: "ok"
+        });
+    } catch (err) {
+        return res.status(400).json({
+            status: "error",
+            error: err
+        });
     }
-    res.sendStatus(200)
-})
 
-var token = ""
+});
 
-function sendTextMessage(sender, text) {
-    messageData = {
-        text:text
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        }
-    })
-}
+app.listen(REST_PORT, function () {
+    console.log('Rest service ready on port ' + REST_PORT);
+});
 
-function sendGenericMessage(sender) {
-    messageData = {
-        "attachment": {
-            "type": "template",
-            "payload": {
-                "template_type": "generic",
-                "elements": [{
-                    "title": "First card",
-                    "subtitle": "Element #1 of an hscroll",
-                    "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
-                    "buttons": [{
-                        "type": "web_url",
-                        "url": "https://www.messenger.com",
-                        "title": "web url"
-                    }, {
-                        "type": "postback",
-                        "title": "Postback",
-                        "payload": "Payload for first element in a generic bubble",
-                    }],
-                }, {
-                    "title": "Second card",
-                    "subtitle": "Element #2 of an hscroll",
-                    "image_url": "http://messengerdemo.parseapp.com/img/gearvr.png",
-                    "buttons": [{
-                        "type": "postback",
-                        "title": "Postback",
-                        "payload": "Payload for second element in a generic bubble",
-                    }],
-                }]
-            }
-        }
-    }
-    request({
-        url: 'https://graph.facebook.com/v2.6/me/messages',
-        qs: {access_token:token},
-        method: 'POST',
-        json: {
-            recipient: {id:sender},
-            message: messageData,
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending messages: ', error)
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error)
-        }
-    })
-}
-
-// spin spin sugar
-app.listen(app.get('port'), function() {
-    console.log('running on port', app.get('port'))
-})
+doSubscribeRequest();
