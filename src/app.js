@@ -50,7 +50,7 @@ function processEvent(event) {
                         sendFBMessage(sender, {text: err.message });
                     }
                 } else if (isDefined(responseText)) {
-                    console.log('Response as text message:' + responseData);
+                    console.log('Response as text message:' + responseData.facebook);
                     sendFBMessage(sender, {text: responseText});
                 }
 
