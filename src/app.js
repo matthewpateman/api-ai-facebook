@@ -81,9 +81,9 @@ function processEvent(event) {
                                     title: 'Show Website'
                                     },
                                     {
-                                    type: 'postback',
-                                    title: 'Start Chatting',
-                                    payload: 'USER_DEFINED_PAYLOAD'
+                                    type: 'web_url',
+                                    url: 'https://www.matthewpateman.com/portfolio',
+                                    title: 'Show Website'
                                     }
                                 }
                             }
