@@ -34,76 +34,72 @@ function processEvent(event) {
                 sessionId: sessionIds.get(sender)
             });
 
-
-
-//response text is here
-
         apiaiRequest.on('response', (response) => {
-            // if (isDefined(response.result)) {
-            //     let responseText = response.result.fulfillment.speech;
-            //     let responseData = response.result.fulfillment.data;
-            //     let action = response.result.action;
+            if (isDefined(response.result)) {
+                let responseText = response.result.fulfillment.speech;
+                let responseData = response.result.fulfillment.data;
+                let action = response.result.action;
 
-            //     if (isDefined(responseData) && isDefined(responseData.facebook)) {
-            //         try {
-            //             console.log('Response as formatted message');
-            //             sendFBMessage(sender, responseData.facebook);
-            //         } catch (err) {
-            //             sendFBMessage(sender, {text: err.message });
-            //         }
-            //     } else if (isDefined(responseText)) {
-            //         console.log('Response as text message:' + responseText);
-            //         sendFBMessage(sender, {text: responseText});
-            //     }
+                if (isDefined(responseData) && isDefined(responseData.facebook)) {
+                    try {
+                        console.log('Response as formatted message');
+                        sendFBMessage(sender, responseData.facebook);
+                    } catch (err) {
+                        sendFBMessage(sender, {text: err.message });
+                    }
+                } else if (isDefined(responseText)) {
+                    console.log('Response as text message:' + responseText);
+                    sendFBMessage(sender, {text: responseText});
+                }
 
 
-            // }
+            }
 
             
 
-            let messageWithImage = {
-                        attachment: { 
-                            type: 'image', 
-                            payload: { 
-                                url: 'http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w' 
-                                    }
-                                }
-                            }
+  //           let messageWithImage = {
+  //                       attachment: { 
+  //                           type: 'image', 
+  //                           payload: { 
+  //                               url: 'http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w' 
+  //                                   }
+  //                               }
+  //                           }
 
-            let messageWithStructure = {
-    "attachment": {
-      "type": "template",
-      "payload": {
-        "template_type": "generic",
-        "elements": [{
-          "title": "First card",
-          "subtitle": "Element #1 of an hscroll",
-          "image_url": "http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w",
-          "buttons": [{
-            "type": "web_url",
-            "url": "https://www.messenger.com/",
-            "title": "Web url"
-          }, {
-            "type": "postback",
-            "title": "Postback",
-            "payload": "text: 'hi'",
-          }],
-        },{
-          "title": "Second card",
-          "subtitle": "Element #2 of an hscroll",
-          "image_url": "http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w",
-          "buttons": [{
-            "type": "postback",
-            "title": "Postback",
-            "payload": "Payload for second element in a generic bubble",
-          }],
-        }]
-      }
-    }
-  }
+  //           let messageWithStructure = {
+  //   "attachment": {
+  //     "type": "template",
+  //     "payload": {
+  //       "template_type": "generic",
+  //       "elements": [{
+  //         "title": "First card",
+  //         "subtitle": "Element #1 of an hscroll",
+  //         "image_url": "http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w",
+  //         "buttons": [{
+  //           "type": "web_url",
+  //           "url": "https://www.messenger.com/",
+  //           "title": "Web url"
+  //         }, {
+  //           "type": "postback",
+  //           "title": "Postback",
+  //           "payload": "text: 'hi'",
+  //         }],
+  //       },{
+  //         "title": "Second card",
+  //         "subtitle": "Element #2 of an hscroll",
+  //         "image_url": "http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w",
+  //         "buttons": [{
+  //           "type": "postback",
+  //           "title": "Postback",
+  //           "payload": "Payload for second element in a generic bubble",
+  //         }],
+  //       }]
+  //     }
+  //   }
+  // }
 
-            console.log('Response as text message');
-            sendFBMessage(sender, messageWithStructure);
+  //           console.log('Response as text message');
+  //           sendFBMessage(sender, messageWithStructure);
 
 
 
@@ -115,12 +111,6 @@ function processEvent(event) {
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
     }
-
-    if (event.postback) {
-            text = JSON.stringify(event.postback)
-            sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
-            continue
-        }
 }
 
 function sendFBMessage(sender, messageData) {
