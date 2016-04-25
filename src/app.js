@@ -37,24 +37,28 @@ function processEvent(event) {
 //response text is here
 
         apiaiRequest.on('response', (response) => {
-            if (isDefined(response.result)) {
-                let responseText = response.result.fulfillment.speech;
-                let responseData = response.result.fulfillment.data;
-                let action = response.result.action;
+            // if (isDefined(response.result)) {
+            //     let responseText = response.result.fulfillment.speech;
+            //     let responseData = response.result.fulfillment.data;
+            //     let action = response.result.action;
 
-                if (isDefined(responseData) && isDefined(responseData.facebook)) {
-                    try {
-                        console.log('Response as formatted message');
-                        sendFBMessage(sender, responseData.facebook);
-                    } catch (err) {
-                        sendFBMessage(sender, {text: err.message });
-                    }
-                } else if (isDefined(responseText)) {
-                    console.log('Response as text message:' + responseText);
-                    sendFBMessage(sender, {text: responseText});
-                }
+            //     if (isDefined(responseData) && isDefined(responseData.facebook)) {
+            //         try {
+            //             console.log('Response as formatted message');
+            //             sendFBMessage(sender, responseData.facebook);
+            //         } catch (err) {
+            //             sendFBMessage(sender, {text: err.message });
+            //         }
+            //     } else if (isDefined(responseText)) {
+            //         console.log('Response as text message:' + responseText);
+            //         sendFBMessage(sender, {text: responseText});
+            //     }
 
-            }
+
+            // }
+
+             console.log('Response as text message:' + responseText);
+                    sendFBMessage(sender, {text: 'Hello Matthew'});
         });
 
         apiaiRequest.on('error', (error) => console.error(error));
