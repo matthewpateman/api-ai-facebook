@@ -57,18 +57,52 @@ function processEvent(event) {
 
             // }
 
+
+  messageData = {
+    "attachment": {
+      "type": "template",
+      "payload": {
+        "template_type": "generic",
+        "elements": [{
+          "title": "First card",
+          "subtitle": "Element #1 of an hscroll",
+          "image_url": "http://messengerdemo.parseapp.com/img/rift.png",
+          "buttons": [{
+            "type": "web_url",
+            "url": "https://www.messenger.com/",
+            "title": "Web url"
+          }, {
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for first element in a generic bubble",
+          }],
+        },{
+          "title": "Second card",
+          "subtitle": "Element #2 of an hscroll",
+          "image_url": "http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w",
+          "buttons": [{
+            "type": "postback",
+            "title": "Postback",
+            "payload": "Payload for second element in a generic bubble",
+          }],
+        }]
+      }
+    }
+
+
              console.log('Response as text message');
-                    sendFBMessage(sender, {
+                    sendFBMessage(sender, messageData ); // {
                         
 
-                        attachment: { 
-                            type: 'image', 
-                            payload: { 
-                                url: 'http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w' 
-                                    }
-                                }
-                            }
+                        // attachment: { 
+                        //     type: 'image', 
+                        //     payload: { 
+                        //         url: 'http://static1.squarespace.com/static/56732772df40f3fd5f559f5d/t/56c399a87da24f0e52c17a65/1455659432519/aesthetics.jpg?format=500w' 
+                        //             }
+                        //         }
+                        //     }
                         
+
                         // attachment: {
                         //     type: 'template',
                         //     payload: {
@@ -97,7 +131,7 @@ function processEvent(event) {
 
 
 
-        });
+        // });
 
         apiaiRequest.on('error', (error) => console.error(error));
         apiaiRequest.end();
