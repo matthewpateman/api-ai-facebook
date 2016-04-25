@@ -78,7 +78,7 @@ function processEvent(event) {
           }
         ]
       }
-    }
+    
 
 
 
