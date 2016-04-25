@@ -58,7 +58,7 @@ function processEvent(event) {
             // }
 
 
-var messageData = '{
+messageData2 = {
     "attachment": {
       "type": "template",
       "payload": {
@@ -87,11 +87,11 @@ var messageData = '{
           }],
         }]
       }
-    }'
+    }
 
 
              console.log('Response as text message');
-                    sendFBMessage(sender, messageData ); // {
+                    sendFBMessage(sender, messageData2 ); // {
                         
 
                         // attachment: { 
