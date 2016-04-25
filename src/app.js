@@ -57,28 +57,8 @@ function processEvent(event) {
 
             // }
 
-             console.log('Response as text message');
-                    sendFBMessage(sender, {
-                        attachment: { 
-                            type: 'template', 
-                                payload:{
-                                    template_type: 'button',
-                                    text: 'What do you want to do next?',
-                                        buttons:[
-                                            {
-                                            type: 'web_url',
-                                            url:'https://petersapparel.parseapp.com',
-                                            title:'Show Website'
-          },
-          {
-            type: 'postback',
-            title:'Start Chatting',
-            payload:'USER_DEFINED_PAYLOAD'
-          }
-        ]
-      }
-                        }
-                    );
+            console.log('Response as text message');
+            sendFBMessage(sender, { attachment: { type: 'template', payload:{template_type: 'button', text: 'What do you want to do next?', buttons:[{type: 'web_url',url:'https://www.matthewpateman.com', title:'Show Website'}, {type: 'postback', title:'Start Chatting', payload:'USER_DEFINED_PAYLOAD' }]}});
 
 
 
